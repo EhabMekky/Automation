@@ -8,11 +8,10 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import util.FrameworkProperties;
-
 import java.time.Duration;
 
 public class DriverStrategy {
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
+    public static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     private DriverStrategy() {}
 

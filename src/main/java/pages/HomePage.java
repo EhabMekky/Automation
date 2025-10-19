@@ -11,12 +11,13 @@ import strategy.DriverStrategy;
 
 import java.time.Duration;
 
+import static strategy.DriverStrategy.driver;
+
 /**
  * Page Object Model for bitheap.tech Home Page
  */
 public class HomePage {
 
-    private WebDriver driver;
     private WebDriverWait wait;
 
     // Header Navigation Elements
@@ -288,12 +289,12 @@ public class HomePage {
     }
 
     public HomePage getPageTitle() {
-        driver.getTitle();
+        driver.get().getTitle();
         return this;
     }
 
     public HomePage getCurrentUrl() {
-        driver.getCurrentUrl();
+        driver.get().getCurrentUrl();
         return this;
     }
 

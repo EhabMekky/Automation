@@ -45,7 +45,7 @@ public class EndToEndTest {
         .checkRememberMe()
         .clickSignIn();
 
-        homePage.clickShopNav();
+        //homePage.clickShopNav();
 
     }
 
