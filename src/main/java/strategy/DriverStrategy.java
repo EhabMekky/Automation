@@ -42,14 +42,7 @@ public class DriverStrategy {
         };
 
         driver.set(webDriver);
-
-        // Configure timeouts from properties
-        webDriver.manage().timeouts()
-                .implicitlyWait(Duration.ofSeconds(FrameworkProperties.getImplicitWait()));
-        webDriver.manage().timeouts()
-                .pageLoadTimeout(Duration.ofSeconds(FrameworkProperties.getPageLoadTimeout()));
-        webDriver.manage().timeouts()
-                .scriptTimeout(Duration.ofSeconds(FrameworkProperties.getScriptTimeout()));
+        configureTimeouts(webDriver);
 
         if (!headless) {
             webDriver.manage().window().maximize();
@@ -85,6 +78,51 @@ public class DriverStrategy {
         }
     }
 
+    /**
+     * Configure timeouts for the driver
+     */
+    private static void configureTimeouts(WebDriver webDriver) {
+        webDriver.manage().timeouts()
+                .implicitlyWait(Duration.ofSeconds(FrameworkProperties.getImplicitWait()))
+                .pageLoadTimeout(Duration.ofSeconds(FrameworkProperties.getPageLoadTimeout()))
+                .scriptTimeout(Duration.ofSeconds(FrameworkProperties.getScriptTimeout()));
+    }
+
+    /**
+     * Apply common headless arguments for Chromium-based browsers
+     */
+    private static void applyHeadlessOptions(org.openqa.selenium.MutableCapabilities options, boolean headless) {
+        if (headless) {
+            options.setCapability("args", new String[]{
+                    "--headless=new",
+                    "--disable-gpu",
+                    "--window-size=1920,1080",
+                    "--disable-dev-shm-usage",
+                    "--no-sandbox"
+            });
+        }
+    }
+
+    /**
+     * Apply common anti-detection options for Chromium-based browsers
+     */
+    private static void applyAntiDetectionOptions(ChromeOptions options) {
+        options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--remote-allow-origins=*");
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
+    }
+
+    /**
+     * Apply common anti-detection options for Edge
+     */
+    private static void applyAntiDetectionOptions(EdgeOptions options) {
+        options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--remote-allow-origins=*");
+        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+        options.setExperimentalOption("useAutomationExtension", false);
+    }
+
     private static WebDriver createChromeDriver(boolean headless) {
         ChromeOptions options = new ChromeOptions();
 
@@ -98,10 +136,7 @@ public class DriverStrategy {
             options.addArguments("--start-maximized");
         }
 
-        options.addArguments("--disable-blink-features=AutomationControlled");
-        options.addArguments("--remote-allow-origins=*");
-        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        options.setExperimentalOption("useAutomationExtension", false);
+        applyAntiDetectionOptions(options);
 
         return new ChromeDriver(options);
     }
@@ -134,10 +169,7 @@ public class DriverStrategy {
             options.addArguments("--start-maximized");
         }
 
-        options.addArguments("--disable-blink-features=AutomationControlled");
-        options.addArguments("--remote-allow-origins=*");
-        options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        options.setExperimentalOption("useAutomationExtension", false);
+        applyAntiDetectionOptions(options);
 
         return new EdgeDriver(options);
     }

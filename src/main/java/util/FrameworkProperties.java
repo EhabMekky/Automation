@@ -44,12 +44,13 @@ public class FrameworkProperties {
      * Sets default properties as fallback
      */
     private static void setDefaultProperties() {
-        properties.setProperty("browser", "CHROME");
-        properties.setProperty("headless", "true");
-        properties.setProperty("implicit.wait", "10");
-        properties.setProperty("page.load.timeout", "30");
-        properties.setProperty("script.timeout", "30");
-        properties.setProperty("base.url", "https://bitheap.tech");
+        properties.setProperty(Constant.KEY_BROWSER, Constant.DEFAULT_BROWSER);
+        properties.setProperty(Constant.KEY_HEADLESS, String.valueOf(Constant.DEFAULT_HEADLESS));
+        properties.setProperty(Constant.KEY_WINDOW_MAXIMIZE, String.valueOf(Constant.DEFAULT_WINDOW_MAXIMIZE));
+        properties.setProperty(Constant.KEY_IMPLICIT_WAIT, String.valueOf(Constant.DEFAULT_IMPLICIT_WAIT));
+        properties.setProperty(Constant.KEY_PAGE_LOAD_TIMEOUT, String.valueOf(Constant.DEFAULT_PAGE_LOAD_TIMEOUT));
+        properties.setProperty(Constant.KEY_SCRIPT_TIMEOUT, String.valueOf(Constant.DEFAULT_SCRIPT_TIMEOUT));
+        properties.setProperty(Constant.KEY_BASE_URL, Constant.DEFAULT_BASE_URL);
         System.out.println("Using default properties");
     }
 
@@ -106,26 +107,30 @@ public class FrameworkProperties {
     // ==========================================
 
     public static String getBrowser() {
-        return getProperty("browser", "CHROME").toUpperCase();
+        return getProperty(Constant.KEY_BROWSER, Constant.DEFAULT_BROWSER).toUpperCase();
     }
 
     public static boolean isHeadless() {
-        return getBooleanProperty("headless", true);
+        return getBooleanProperty(Constant.KEY_HEADLESS, Constant.DEFAULT_HEADLESS);
+    }
+
+    public static boolean isWindowMaximize() {
+        return getBooleanProperty(Constant.KEY_WINDOW_MAXIMIZE, Constant.DEFAULT_WINDOW_MAXIMIZE);
     }
 
     public static int getImplicitWait() {
-        return getIntProperty("implicit.wait", 10);
+        return getIntProperty(Constant.KEY_IMPLICIT_WAIT, Constant.DEFAULT_IMPLICIT_WAIT);
     }
 
     public static int getPageLoadTimeout() {
-        return getIntProperty("page.load.timeout", 30);
+        return getIntProperty(Constant.KEY_PAGE_LOAD_TIMEOUT, Constant.DEFAULT_PAGE_LOAD_TIMEOUT);
     }
 
     public static int getScriptTimeout() {
-        return getIntProperty("script.timeout", 30);
+        return getIntProperty(Constant.KEY_SCRIPT_TIMEOUT, Constant.DEFAULT_SCRIPT_TIMEOUT);
     }
 
     public static String getBaseUrl() {
-        return getProperty("base.url", "https://bitheap.tech");
+        return getProperty(Constant.KEY_BASE_URL, Constant.DEFAULT_BASE_URL);
     }
 }

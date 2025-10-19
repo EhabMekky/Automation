@@ -1,9 +1,11 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import strategy.DriverStrategy;
 
@@ -27,7 +29,7 @@ public class HomePage {
     @FindBy(xpath = "//a[text()='Home' and contains(@href, 'bitheap.tech')]")
     private WebElement homeNavLink;
 
-    @FindBy(xpath = "//a[text()='Shop']")
+    @FindBy(xpath = "//*[@id='menu-bluehost-website-builder']/li[2]/a")
     private WebElement shopNavLink;
 
     @FindBy(xpath = "//a[text()='Blog']")
@@ -141,139 +143,206 @@ public class HomePage {
     @FindBy(xpath = "//a[text()='Dismiss']")
     private WebElement dismissCurrencyNotification;
 
+
+    // Cookies Locators
+    @FindBy(css = ".cky-consent-container.cky-box-bottom-left")
+    private WebElement cookiesNotification;
+
+    @FindBy(css = ".cky-btn.cky-btn-customize")
+    private WebElement customizeCookiesButton;
+
+    @FindBy(xpath = "//div[2]/button[3]")
+    private WebElement rejectAllCookiesButton;
+
+    @FindBy(xpath = "//div[2]//button[@aria-label='Accept All']")
+    private WebElement acceptAllCookiesButton;
+
+
     // Constructor
     public HomePage() {
         PageFactory.initElements(DriverStrategy.getDriver(), this);
+        wait = new WebDriverWait(DriverStrategy.getDriver(), Duration.ofSeconds(3));
     }
 
     // Navigation Actions
-    public void clickLogo() {
+    public HomePage clickLogo() {
         logoLink.click();
+        return this;
     }
 
-    public void clickCart() {
+    public HomePage clickCart() {
         cartLink.click();
+        return this;
     }
 
-    public void clickShopNav() {
+    public HomePage clickShopNav() {
+
+        //close the overlay
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(
+                By.className("xoo-el-main")
+        ));
+
+        wait.until(d -> shopNavLink.isDisplayed());
+
         shopNavLink.click();
+        return this;
     }
 
-    public void clickBlogNav() {
+    public HomePage clickBlogNav() {
         blogNavLink.click();
+        return this;
     }
 
-    public void clickContactUsNav() {
+    public HomePage clickContactUsNav() {
         contactUsNavLink.click();
+        return this;
     }
 
-    public void clickLogin() {
+    public HomePage clickLogin() {
         loginNavItem.click();
+        return this;
     }
 
-    public void clickRegister() {
+    public HomePage clickRegister() {
         registerNavItem.click();
+        return this;
     }
 
     // Section Actions
-    public void clickOurServicesButton() {
+    public HomePage clickOurServicesButton() {
         ourServicesButton.click();
+        return this;
     }
 
-    public void clickToShopButton() {
+    public HomePage clickToShopButton() {
         toShopButton.click();
+        return this;
     }
 
-    public void clickToBlogButton() {
+    public HomePage clickToBlogButton() {
         toBlogButton.click();
+        return this;
     }
 
     // Portfolio Actions
-    public void clickHeadsnapProject() {
+    public HomePage clickHeadsnapProject() {
         headsnapLink.click();
+        return this;
     }
 
-    public void clickClaimsDetectiveProject() {
+    public HomePage clickClaimsDetectiveProject() {
         claimsDetectiveLink.click();
+        return this;
     }
 
-    public void clickYouTubeChannelProject() {
+    public HomePage clickYouTubeChannelProject() {
         youtubeChannelLink.click();
+        return this;
     }
 
     // Newsletter Subscription
-    public void enterEmail(String email) {
+    public HomePage enterEmail(String email) {
         emailInputField.clear();
         emailInputField.sendKeys(email);
+        return this;
     }
 
-    public void clickSubscribe() {
+    public HomePage clickSubscribe() {
         subscribeButton.click();
+        return this;
     }
 
-    public void subscribeToNewsletter(String email) {
+    public HomePage subscribeToNewsletter(String email) {
         enterEmail(email);
         clickSubscribe();
+        return this;
     }
 
     // Social Media Actions
-    public void clickFacebook() {
+    public HomePage clickFacebook() {
         facebookLink.click();
+        return this;
     }
 
-    public void clickTwitter() {
+    public HomePage clickTwitter() {
         twitterLink.click();
+        return this;
     }
 
-    public void clickInstagram() {
+    public HomePage clickInstagram() {
         instagramLink.click();
+        return this;
     }
 
-    public void clickYouTube() {
+    public HomePage clickYouTube() {
         youtubeLink.click();
+        return this;
     }
 
     // Utility Methods
-    public void dismissCurrencyNotification() {
+    public HomePage dismissCurrencyNotification() {
         if (dismissCurrencyNotification.isDisplayed()) {
             dismissCurrencyNotification.click();
         }
+        return this;
     }
 
-    public String getPageTitle() {
-        return driver.getTitle();
+    public HomePage getPageTitle() {
+        driver.getTitle();
+        return this;
     }
 
-    public String getCurrentUrl() {
-        return driver.getCurrentUrl();
+    public HomePage getCurrentUrl() {
+        driver.getCurrentUrl();
+        return this;
     }
 
     // Verification Methods
-    public boolean isWelcomeHeadingDisplayed() {
-        return welcomeHeading.isDisplayed();
+    public HomePage isWelcomeHeadingDisplayed() {
+        welcomeHeading.isDisplayed();
+        return this;
     }
 
-    public boolean isExpertiseHeadingDisplayed() {
-        return expertiseHeading.isDisplayed();
+    public HomePage isExpertiseHeadingDisplayed() {
+        expertiseHeading.isDisplayed();
+        return this;
     }
 
-    public boolean isOnlineCoursesHeadingDisplayed() {
-        return onlineCoursesHeading.isDisplayed();
+    public HomePage isOnlineCoursesHeadingDisplayed() {
+        onlineCoursesHeading.isDisplayed();
+        return this;
     }
 
-    public boolean isPortfolioHeadingDisplayed() {
-        return portfolioHeading.isDisplayed();
+    public HomePage isPortfolioHeadingDisplayed() {
+        portfolioHeading.isDisplayed();
+        return this;
     }
 
-    public boolean isTestimonialsHeadingDisplayed() {
-        return testimonialsHeading.isDisplayed();
+    public HomePage isTestimonialsHeadingDisplayed() {
+        testimonialsHeading.isDisplayed();
+        return this;
     }
 
-    public boolean isSubscribeHeadingDisplayed() {
-        return subscribeHeading.isDisplayed();
+    public HomePage isSubscribeHeadingDisplayed() {
+        subscribeHeading.isDisplayed();
+        return this;
     }
 
-    public String getWelcomeHeadingText() {
-        return welcomeHeading.getText();
+    public HomePage getWelcomeHeadingText() {
+        welcomeHeading.getText();
+        return this;
     }
+
+    //Cookies Acceptance
+
+    public HomePage waitCookieWindowPresent() {
+        wait.until(driver -> cookiesNotification.isDisplayed());
+        return this;
+    }
+
+    public HomePage acceptAllCookies() {
+        acceptAllCookiesButton.click();
+        return this;
+    }
+
 }

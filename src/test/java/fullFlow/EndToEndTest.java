@@ -1,3 +1,5 @@
+package fullFlow;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,18 +28,25 @@ public class EndToEndTest {
         loginPage = new LoginPage();
     }
 
+
     @Test
     public void endToEndFlow()
     {
         driver.get("https://bitheap.tech/");
         System.out.println(driver.getTitle());
 
-        homePage.clickLogin();
-        loginPage.enterUsername("test@alpha.com");
-        loginPage.enterPassword("Test@1234");
-        loginPage.togglePasswordVisibility();
-        loginPage.checkRememberMe();
-        loginPage.clickSignIn();
+        homePage.waitCookieWindowPresent()
+                .acceptAllCookies()
+                .clickLogin();
+
+        loginPage.enterUsername("test@alpha.com")
+        .enterPassword("Test@1234")
+        .togglePasswordVisibility()
+        .checkRememberMe()
+        .clickSignIn();
+
+        homePage.clickShopNav();
+
     }
 
     @AfterClass

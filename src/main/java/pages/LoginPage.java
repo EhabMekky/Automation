@@ -34,7 +34,7 @@ public class LoginPage {
     private WebElement passwordVisibilityToggle;
 
     // Remember Me Checkbox
-    @FindBy(xpath = "//input[@type='checkbox' and contains(@id, 'remember')]")
+    @FindBy(xpath = "//span[contains(text(),'Remember')]")
     private WebElement rememberMeCheckbox;
 
     @FindBy(xpath = "//label[contains(., 'Remember me')]")
@@ -58,153 +58,180 @@ public class LoginPage {
 
     // Constructor
     public LoginPage() {
-       PageFactory.initElements(DriverStrategy.getDriver(), this);
-         this.wait = new WebDriverWait(DriverStrategy.getDriver(), Duration.ofSeconds(3));
+        PageFactory.initElements(DriverStrategy.getDriver(), this);
+        this.wait = new WebDriverWait(DriverStrategy.getDriver(), Duration.ofSeconds(3));
     }
 
     // Wait for login modal to be visible
-    public void waitForLoginModalToAppear() {
+    public LoginPage waitForLoginModalToAppear() {
         wait.until(ExpectedConditions.visibilityOf(usernameEmailField));
+        return this;
     }
 
-    public void clickSignUpTab() {
+    public LoginPage clickSignUpTab() {
         signUpTab.click();
+        return this;
     }
 
     // Form Field Actions
-    public void enterUsername(String username) {
+    public LoginPage enterUsername(String username) {
         wait.until(ExpectedConditions.visibilityOf(usernameEmailField));
         usernameEmailField.clear();
         usernameEmailField.sendKeys(username);
+        return this;
     }
 
-    public void enterPassword(String password) {
+    public LoginPage enterPassword(String password) {
         wait.until(ExpectedConditions.visibilityOf(passwordField));
         passwordField.clear();
         passwordField.sendKeys(password);
+        return this;
     }
 
-    public void togglePasswordVisibility() {
+    public LoginPage togglePasswordVisibility() {
         passwordVisibilityToggle.click();
+        return this;
     }
 
-    public void checkRememberMe() {
+    public LoginPage checkRememberMe() {
         if (!rememberMeCheckbox.isSelected()) {
             rememberMeCheckbox.click();
         }
+        return this;
     }
 
-    public void uncheckRememberMe() {
+    public LoginPage uncheckRememberMe() {
         if (rememberMeCheckbox.isSelected()) {
             rememberMeCheckbox.click();
         }
+        return this;
     }
 
-    public void clickRememberMeLabel() {
+    public LoginPage clickRememberMeLabel() {
         rememberMeLabel.click();
+        return this;
     }
 
     // Navigation Actions
-    public void clickForgotPassword() {
+    public LoginPage clickForgotPassword() {
         forgotPasswordLink.click();
+        return this;
     }
 
-    public void clickSignIn() {
+    public LoginPage clickSignIn() {
         signInButton.click();
+        return this;
     }
 
-    public void closeModal() {
+    public LoginPage closeModal() {
         closeModalButton.click();
+        return this;
     }
 
     // Combined Login Action
-    public void login(String username, String password) {
+    public LoginPage login(String username, String password) {
         waitForLoginModalToAppear();
         enterUsername(username);
         enterPassword(password);
         clickSignIn();
+        return this;
     }
 
-    public void loginWithRememberMe(String username, String password) {
+    public LoginPage loginWithRememberMe(String username, String password) {
         waitForLoginModalToAppear();
         enterUsername(username);
         enterPassword(password);
         checkRememberMe();
         clickSignIn();
+        return this;
     }
 
     // Verification Methods
-    public boolean isLoginModalDisplayed() {
+    public LoginPage isLoginModalDisplayed() {
         try {
-            return usernameEmailField.isDisplayed() && passwordField.isDisplayed();
+            usernameEmailField.isDisplayed();
+            passwordField.isDisplayed();
         } catch (Exception e) {
-            return false;
+            // Exception handled
         }
+        return this;
     }
 
-    public boolean isUsernameFieldDisplayed() {
-        return usernameEmailField.isDisplayed();
+    public LoginPage isUsernameFieldDisplayed() {
+        usernameEmailField.isDisplayed();
+        return this;
     }
 
-    public boolean isPasswordFieldDisplayed() {
-        return passwordField.isDisplayed();
+    public LoginPage isPasswordFieldDisplayed() {
+        passwordField.isDisplayed();
+        return this;
     }
 
-    public boolean isSignInButtonDisplayed() {
-        return signInButton.isDisplayed();
+    public LoginPage isSignInButtonDisplayed() {
+        signInButton.isDisplayed();
+        return this;
     }
 
-    public boolean isRememberMeCheckboxSelected() {
-        return rememberMeCheckbox.isSelected();
+    public LoginPage isRememberMeCheckboxSelected() {
+        rememberMeCheckbox.isSelected();
+        return this;
     }
 
-    public boolean isForgotPasswordLinkDisplayed() {
-        return forgotPasswordLink.isDisplayed();
+    public LoginPage isForgotPasswordLinkDisplayed() {
+        forgotPasswordLink.isDisplayed();
+        return this;
     }
 
-    public boolean isErrorMessageDisplayed() {
+    public LoginPage isErrorMessageDisplayed() {
         try {
-            return errorMessage.isDisplayed();
+            errorMessage.isDisplayed();
         } catch (Exception e) {
-            return false;
+            // Exception handled
         }
+        return this;
     }
 
-    public String getErrorMessageText() {
-        if (isErrorMessageDisplayed()) {
-            return errorMessage.getText();
+    public LoginPage getErrorMessageText() {
+        if (errorMessage.isDisplayed()) {
+            errorMessage.getText();
         }
-        return "";
+        return this;
     }
 
 
-    public boolean isSignUpTabVisible() {
-        return signUpTab.isDisplayed();
+    public LoginPage isSignUpTabVisible() {
+        signUpTab.isDisplayed();
+        return this;
     }
 
     // Clear Form
-    public void clearLoginForm() {
+    public LoginPage clearLoginForm() {
         usernameEmailField.clear();
         passwordField.clear();
         if (rememberMeCheckbox.isSelected()) {
             uncheckRememberMe();
         }
+        return this;
     }
 
     // Get Field Values
-    public String getUsernameFieldValue() {
-        return usernameEmailField.getAttribute("value");
+    public LoginPage getUsernameFieldValue() {
+        usernameEmailField.getAttribute("value");
+        return this;
     }
 
-    public String getPasswordFieldValue() {
-        return passwordField.getAttribute("value");
+    public LoginPage getPasswordFieldValue() {
+        passwordField.getAttribute("value");
+        return this;
     }
 
-    public String getUsernameFieldPlaceholder() {
-        return usernameEmailField.getAttribute("placeholder");
+    public LoginPage getUsernameFieldPlaceholder() {
+        usernameEmailField.getAttribute("placeholder");
+        return this;
     }
 
-    public String getPasswordFieldPlaceholder() {
-        return passwordField.getAttribute("placeholder");
+    public LoginPage getPasswordFieldPlaceholder() {
+        passwordField.getAttribute("placeholder");
+        return this;
     }
 }
