@@ -8,7 +8,7 @@ import strategy.DriverStrategy;
 
 /**
  * Page Object Model for Bitheap Shop Page
- * URL: https://bitheap.tech/shop/
+ * URL: <a href="https://bitheap.tech/shop/">...</a>
  * Generated from DOM analysis after login
  */
 public class BitheapShopPage {
@@ -36,6 +36,7 @@ public class BitheapShopPage {
     private WebElement productChatbotDevelopmentLink;
 
     @FindBy(xpath = "//*[@id=\"main\"]/ul[1]/li[1]/a[2]")
+
     private WebElement btnAddToCartChatbot;
 
     // Product 2: Code Gamers Development
