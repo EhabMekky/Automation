@@ -1,13 +1,10 @@
 package pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import strategy.DriverStrategy;
 
@@ -32,7 +29,7 @@ public class HomePage {
     @FindBy(xpath = "//a[text()='Home' and contains(@href, 'bitheap.tech')]")
     private WebElement homeNavLink;
 
-    @FindBy(linkText = "Shop")
+    @FindBy(xpath = "//*[@id=\"menu-item-1310\"]/a")
     private WebElement shopNavLink;
 
     @FindBy(xpath = "//a[text()='Blog']")
@@ -179,27 +176,11 @@ public class HomePage {
     }
 
     public HomePage clickShopNav() {
+
+        wait = new WebDriverWait(DriverStrategy.getDriver(), Duration.ofSeconds(5));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(
-                By.className("xoo-el-main")
-        ));
-
-        // Create a FluentWait that ignores click interception temporarily
-        FluentWait<WebDriver> fluentWait = new FluentWait<>(DriverStrategy.getDriver())
-                .withTimeout(Duration.ofSeconds(10))
-                .pollingEvery(Duration.ofMillis(500))
-                .ignoring(ElementClickInterceptedException.class);
-
-        // Wait until the element is clickable and click it
-        fluentWait.until(driver -> {
-            try {
-                wait.until(ExpectedConditions.elementToBeClickable(shopNavLink));
-                shopNavLink.click();
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        });
-
+                By.cssSelector("input[name='xoo-el-username']")));
+        shopNavLink.click();
         return this;
     }
 

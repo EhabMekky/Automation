@@ -1,5 +1,7 @@
 package util;
 
+import java.io.File;
+
 public class Constant {
     // File names
     public static final String PROP_FILE_NAME = "framework.properties";
@@ -36,4 +38,8 @@ public class Constant {
 
     // Property keys - Application
     public static final String KEY_BASE_URL = "base.url";
+    public static final CharSequence CART_COUNT_TEXT = "1";
+    public static final String SCREENSHOT_FOLDER = "Screenshots\\";
+    public static final int SCREENSHOT_NAME_LENGTH = 10;
+    public static final String SCREENSHOT_EXTENSION = ".png";
 }
