@@ -8,8 +8,6 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.And;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.BeforeClass;
-import pages.BitheapShopPage;
 import pages.HomePage;
 import pages.LoginPage;
 import strategy.DriverStrategy;
@@ -24,7 +22,7 @@ public class StepDefinition {
     private static String username;
     private static String password;
 
-    @Before
+    @Before //Before each scenario
     public void setUp() {
         driver = DriverStrategy.initDriver();
         homePage = new HomePage();
