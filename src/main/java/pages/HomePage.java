@@ -177,11 +177,36 @@ public class HomePage {
     }
 
     public HomePage clickShopNav() {
+        try {
+            // Wait for login modal to close if it's visible
+            WebDriverWait modalWait = new WebDriverWait(DriverStrategy.getDriver(), Duration.ofSeconds(10));
 
-        wait = new WebDriverWait(DriverStrategy.getDriver(), Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(
-                By.cssSelector("input[name='xoo-el-username']")));
-        shopNavLink.click();
+            // Check if login modal exists and wait for it to close
+            try {
+                WebElement loginModal = DriverStrategy.getDriver().findElement(
+                        By.cssSelector("input[name='xoo-el-username']"));
+
+                if (loginModal.isDisplayed()) {
+                    System.out.println("Login modal detected, waiting for it to close...");
+                    modalWait.until(ExpectedConditions.invisibilityOf(loginModal));
+                }
+            } catch (Exception e) {
+                // Modal not present or already closed, continue
+                System.out.println("Login modal not found or already closed, proceeding...");
+            }
+
+            // Add small delay to ensure page is stable
+            Thread.sleep(500);
+
+            // Click shop navigation
+            modalWait.until(ExpectedConditions.elementToBeClickable(shopNavLink));
+            shopNavLink.click();
+
+        } catch (Exception e) {
+            System.err.println("Error in clickShopNav: " + e.getMessage());
+            // Fallback: just try to click the shop link directly
+            shopNavLink.click();
+        }
         return this;
     }
 
