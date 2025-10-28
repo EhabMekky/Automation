@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import strategy.DriverStrategy;
 
 import java.time.Duration;
@@ -295,7 +296,9 @@ public class HomePage {
 
     // Verification Methods
     public HomePage isWelcomeHeadingDisplayed() {
-        welcomeHeading.isDisplayed();
+        boolean cond = welcomeHeading.isDisplayed();
+
+        Assert.assertTrue(cond, "Welcome heading is not displayed");
         return this;
     }
 
