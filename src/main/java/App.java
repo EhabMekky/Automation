@@ -95,6 +95,7 @@ public class App {
          }
 
 */
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // Implicit wait for 10 seconds
 
         Thread.sleep(1000); // not good => use implicit and explicit waits
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // explicit wait
@@ -109,7 +110,8 @@ public class App {
         FluentWait.until(driver -> driver.findElement(By.id("Element-Id")).isDisplayed());
 
 
-        //Javascript executor => Engine inside selenium that can execute javascript code
+        // Javascript e
+        // executor => Engine inside selenium that can execute javascript code
         // Scrolling, clicking, getting values from DOM
         // Not recommended to use it, but sometimes it is necessary
         driver.get("https://www.amazon.in/");
