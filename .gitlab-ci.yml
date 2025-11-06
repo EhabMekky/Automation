@@ -1,10 +1,158 @@
-variables:
-  JAVA_HOME: C:\Program Files\Java\jdk-11.0.10
+stages:
+  - build
+  - test
+  - report
 
-automationJob:
+# Global variables
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version"
+  ALLURE_VERSION: "2.30.0"
+
+# Cache Maven dependencies for faster builds
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+
+# Build stage - Compile and package
+build:
   stage: build
-  tags:
-    - automation-framework
+  image: maven:3.9-eclipse-temurin-24
   script:
-    - mvn compile
-    - mvn package
+    - echo "Building the project..."
+    - mvn $MAVEN_CLI_OPTS clean compile
+  artifacts:
+    paths:
+      - target/
+    expire_in: 1 hour
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Test stage - Run Selenium tests
+test:selenium:
+  stage: test
+  image: maven:3.9-eclipse-temurin-24
+  services:
+    - selenium/standalone-chrome:latest
+  variables:
+    # Run tests in headless mode for CI/CD
+    BROWSER: "CHROME"
+    HEADLESS: "true"
+  before_script:
+    - echo "Installing Chrome and dependencies..."
+    - apt-get update
+    - apt-get install -y wget unzip gnupg2 software-properties-common
+    # Install Chrome
+    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    - echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+    - apt-get update
+    - apt-get install -y google-chrome-stable
+    # Verify Chrome installation
+    - google-chrome --version
+    # Install ChromeDriver
+    - CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
+    - wget -q "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROME_VERSION}.0.6613.85/linux64/chromedriver-linux64.zip"
+    - unzip -o chromedriver-linux64.zip
+    - mv chromedriver-linux64/chromedriver /usr/local/bin/
+    - chmod +x /usr/local/bin/chromedriver
+    - chromedriver --version
+  script:
+    - echo "Running Selenium tests..."
+    - mvn $MAVEN_CLI_OPTS clean test -Dbrowser=CHROME -Dheadless=true
+  after_script:
+    - echo "Tests completed. Check artifacts for results."
+  artifacts:
+    when: always
+    paths:
+      - target/surefire-reports/
+      - target/allure-results/
+      - Screenshots/
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+    expire_in: 7 days
+  allow_failure: false
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Cucumber BDD Tests
+test:cucumber:
+  stage: test
+  image: maven:3.9-eclipse-temurin-24
+  before_script:
+    - echo "Installing Chrome and dependencies..."
+    - apt-get update
+    - apt-get install -y wget unzip gnupg2 software-properties-common
+    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    - echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+    - apt-get update
+    - apt-get install -y google-chrome-stable
+    - google-chrome --version
+    # Install ChromeDriver
+    - CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
+    - wget -q "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/${CHROME_VERSION}.0.6613.85/linux64/chromedriver-linux64.zip"
+    - unzip -o chromedriver-linux64.zip
+    - mv chromedriver-linux64/chromedriver /usr/local/bin/
+    - chmod +x /usr/local/bin/chromedriver
+  script:
+    - echo "Running Cucumber BDD tests..."
+    - mvn $MAVEN_CLI_OPTS test -Dtest=cucumber.TestRunner -Dbrowser=CHROME -Dheadless=true
+  artifacts:
+    when: always
+    paths:
+      - target/cucumber-reports.html
+      - target/allure-results/
+    expire_in: 7 days
+  allow_failure: true
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Generate Allure Report
+report:allure:
+  stage: report
+  image: maven:3.9-eclipse-temurin-24
+  before_script:
+    - echo "Installing Allure..."
+    - apt-get update && apt-get install -y wget
+    - wget -q https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz
+    - tar -zxvf allure-${ALLURE_VERSION}.tgz -C /opt/
+    - ln -s /opt/allure-${ALLURE_VERSION}/bin/allure /usr/bin/allure
+    - allure --version
+  script:
+    - echo "Generating Allure report..."
+    - allure generate target/allure-results --clean -o target/allure-report
+  artifacts:
+    paths:
+      - target/allure-report/
+    expire_in: 30 days
+  dependencies:
+    - test:selenium
+    - test:cucumber
+  only:
+    - main
+    - develop
+    - merge_requests
+
+# Deploy Allure Report to GitLab Pages (optional)
+pages:
+  stage: report
+  image: alpine:latest
+  script:
+    - echo "Preparing Allure report for GitLab Pages..."
+    - mkdir -p public
+    - cp -r target/allure-report/* public/ || echo "No Allure report found"
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  dependencies:
+    - report:allure
+  only:
+    - main
