@@ -13,6 +13,7 @@ public class TestDataLoader {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static JsonNode loadLoginData() {
+        //make this path dynamic
         Path path = Paths.get(System.getProperty("user.dir"), "src", "test", "resources", "testData", "loginData.json");
         try (InputStream is = Files.newInputStream(path)) {
             return MAPPER.readTree(is);
