@@ -25,7 +25,7 @@ public class BaseTest {
     @Step("Setup: Initialize browser and navigate to base URL")
     public void setup()
     {
-        driver = DriverStrategy.initDriver(DriverStrategy.BrowserType.EDGE, false);
+        driver = DriverStrategy.initDriver();
         driver.get(FrameworkProperties.getBaseUrl());
 
         Allure.addAttachment("Browser", DriverStrategy.BrowserType.EDGE.toString());
