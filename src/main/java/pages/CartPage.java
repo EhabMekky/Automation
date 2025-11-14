@@ -1,10 +1,17 @@
 package pages;
 
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import strategy.DriverStrategy;
+
+import java.time.Duration;
+
+import static strategy.DriverStrategy.driver;
+import static strategy.DriverStrategy.getDriver;
 
 public class CartPage {
 
@@ -46,6 +53,8 @@ public class CartPage {
 
     public CartPage assertCartCountIncreased(int previousCount) {
         int currentCount = getCartItemCount();
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
+        wait.until(driver1 -> cartCount.isDisplayed());
         Assert.assertTrue(currentCount > previousCount,
                 "Cart count did not increase. Expected: >" + previousCount + ", Actual: " + currentCount);
         return this;
