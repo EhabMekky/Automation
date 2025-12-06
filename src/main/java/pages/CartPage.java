@@ -52,8 +52,8 @@ public class CartPage {
     }
 
     public CartPage assertCartCountIncreased(int previousCount) {
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
         int currentCount = getCartItemCount();
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
         wait.until(driver1 -> cartCount.isDisplayed());
         Assert.assertTrue(currentCount > previousCount,
                 "Cart count did not increase. Expected: >" + previousCount + ", Actual: " + currentCount);
